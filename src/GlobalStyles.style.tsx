@@ -11,6 +11,8 @@ export const GlobalStyles = createGlobalStyle`
 
   #calc-wrap {
     background-color: #1a1a1a;
+    border: solid 1px #535252;
+    border-radius: 4px;
   }
 
   #display {
