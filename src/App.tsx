@@ -3,7 +3,7 @@ import { StyledButtonComp } from './components/ButtonComp.style';
 import { GlobalStyles } from './GlobalStyles.style';
 import './App.css';
 
-function App() {
+function App() { 
   class displayData {
     top: string;
     bottom: string;
@@ -11,11 +11,17 @@ function App() {
       this.top = top;
       this.bottom = bottom;
     }
+    public isTopZero(): boolean {
+      return this.top === '0';
+    }    
     public isBottomZero(): boolean {
       return this.bottom === '0';
     }
-    public isTopZero(): boolean {
-      return this.top === '0';
+    public isBottomNegative(): boolean {
+      return this.bottom.includes('-')
+    }
+    public isBottomFloat(): boolean {
+      return this.bottom.includes('.')
     }
   }
 
@@ -33,6 +39,8 @@ function App() {
   const [display, setDisplay] = useState<displayData>(new displayData('0', '0'));
   const [expression, setExpression] = useState<expressionData>(new expressionData(0, 0, ''));
   const [operationSwitch, setOperationSwitch] = useState<boolean>(false);
+  const [quickCalculationMode, setQuickCalculationMode] = useState<boolean>(false);
+  const [quickCalculationOperation, setQuickCalculationOperation] = useState<string>('');
   const [result, setResult] = useState<string>('');
 
   function handleACPress(): void {
@@ -43,11 +51,11 @@ function App() {
 
   function handleDigitPress(digit: string): void {
     if (display.isBottomZero() === true) {
-      setDisplay(new displayData(display.top, digit))
-      setOperationSwitch(false)
+      setDisplay(new displayData(display.top, digit));
+      setOperationSwitch(false);
     } else {
-      setDisplay(new displayData(display.top, display.bottom + digit))
-      setOperationSwitch(false)
+      setDisplay(new displayData(display.top, display.bottom + digit));
+      setOperationSwitch(false);
     }
   }
 
@@ -58,7 +66,7 @@ function App() {
         r = expression.operand1 + expression.operand2;
         break;
       case '-':
-        r = expression.operand1 + expression.operand2;
+        r = expression.operand1 - expression.operand2;
         break;
       case 'x':
         r = expression.operand1 * expression.operand2;
@@ -73,41 +81,73 @@ function App() {
   useEffect(() => {
     if (display.isTopZero() === false) {
       setResult(calculateResult()); 
-      console.log(expression)
-      console.log('useEffect result')
+      console.log(expression);
+      console.log('useEffect result');
     }   
   }, [expression]) 
 
   useEffect(() => {
     if (display.isTopZero() === false && result !== '') {
-      setDisplay(
-        new displayData(
-          expression.operand1 + ' ' + expression.operation + ' ' + expression.operand2 + ' =', result
+      if (quickCalculationMode === true) {
+        setDisplay(
+          new displayData(
+            result + ' ' + quickCalculationOperation, '0'
+          )
         )
-      )
-      setResult('')
-      console.log('useEffect display')
+        setResult('')
+        console.log('quick calc') 
+      } else {
+        setDisplay(
+          new displayData(
+            expression.operand1 + ' ' + expression.operation + ' ' + expression.operand2 + ' =', result
+          )
+        )
+        setResult('')
+        console.log('useEffect display')  
+      }
+      
     }   
   }, [result])
 
   function handleOperationPress(operation: string): void {
     if (display.isTopZero() === true || display.top.includes('=') === true) {
-      setDisplay(new displayData(display.bottom + ' ' + operation, '0'))
-      setOperationSwitch(true)
-      console.log('case1')
+      setDisplay(new displayData(display.bottom + ' ' + operation, '0'));
+      setOperationSwitch(true);
+      setQuickCalculationMode(false);
+      console.log('case1');
     } else if (operationSwitch === true) {
       setDisplay(
         new displayData(
           display.top.split(' ')[0] + ' ' + operation, '0'
         )
-      )
+      );
+    } else if (quickCalculationMode === true) {
+      
     } else { 
       setExpression(
         new expressionData(
           Number.parseFloat(display.top), Number.parseFloat(display.bottom), display.top.split(' ')[1]
         )
+      );
+      setQuickCalculationMode(true);
+      setQuickCalculationOperation(operation);
+      console.log('case3');
+    }
+  }
+
+  function handleNegativePress(): void {
+    if (display.isBottomNegative() === false && display.isBottomZero() === false) {
+      setDisplay(
+        new displayData(
+          display.top, '-' + display.bottom
+        )
       )
-      console.log("calculated")
+    } else {
+      setDisplay(
+        new displayData(
+          display.top, display.bottom.replace('-', '')
+        )
+      )
     }
   }
 
@@ -119,7 +159,7 @@ function App() {
           Number.parseFloat(display.top.split(' ')[2]),
           display.top.split(' ')[1]
         )
-      )
+      );
     } else {
       setExpression(
         new expressionData(
@@ -127,7 +167,8 @@ function App() {
           Number.parseFloat(display.bottom),
           display.top.split(' ')[1]
         )
-      )
+      );
+      setQuickCalculationMode(false);
     }
   }
 
@@ -168,7 +209,8 @@ function App() {
                   <StyledButtonComp label={'9'} onClickProp={() => handleDigitPress('9')}/>              
                 </div>
                 <div>
-                  <StyledButtonComp $doubleHor label={'0'} onClickProp={() => handleDigitPress('0')}/>   
+                  <StyledButtonComp label={'+/-'} onClickProp={handleNegativePress}/> 
+                  <StyledButtonComp label={'0'} onClickProp={() => handleDigitPress('0')}/>                      
                   <StyledButtonComp label={'.'}/>                
                 </div>         
               </div>
