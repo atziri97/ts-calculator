@@ -18,7 +18,8 @@ export const GlobalStyles = createGlobalStyle`
   #display {
     text-align: right;
     padding: 10px 7px;
-    overflow: visible;
+    width: 236px;
+    overflow-wrap: break-word;
   }
 
   #display-bottom-text {

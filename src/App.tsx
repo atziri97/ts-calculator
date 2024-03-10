@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js';
 import { useState, useEffect } from 'react';
 import { StyledButtonComp } from './components/ButtonComp.style';
 import { GlobalStyles } from './GlobalStyles.style';
@@ -84,22 +85,24 @@ function App() {
   }
 
   function calculateResult(): string {
-    let r: number = 0;
+    let result: number = 0;
+    let a = new BigNumber(expression.operand1);
+    let b = new BigNumber(expression.operand2);
     switch (expression.operation) {
       case '+':
-        r = expression.operand1 + expression.operand2;
+        result = a.plus(b).toNumber();
         break;
       case '-':
-        r = expression.operand1 - expression.operand2;
+        result = a.minus(b).toNumber();
         break;
       case 'x':
-        r = expression.operand1 * expression.operand2;
+        result = a.multipliedBy(b).toNumber();
         break;
       case '/':
-        r = expression.operand1 / expression.operand2;
+        result = a.dividedBy(b).toNumber();
         break;
     }
-    return precisionCompensation(r).toString(); 
+    return precisionCompensation(result).toString(); 
   }
 
   useEffect(() => {
