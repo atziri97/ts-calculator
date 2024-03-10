@@ -26,6 +26,9 @@ function App() {
     public isBottomFloat(): boolean {
       return this.bottom.includes('.')
     }
+    public isBottomSafe(): boolean {
+      return this.bottom.length < 15
+    }
   }
 
   class expressionData {
@@ -44,6 +47,7 @@ function App() {
   const [operationSwitch, setOperationSwitch] = useState<boolean>(false);
   const [quickCalculationMode, setQuickCalculationMode] = useState<boolean>(false);
   const [quickCalculationOperation, setQuickCalculationOperation] = useState<string>('');
+  const [calculationCallback, setCalculationCallback] = useState<boolean>(false);
   const [result, setResult] = useState<string>('');
 
   function handleACPress(): void {
@@ -55,19 +59,32 @@ function App() {
   }
 
   function handleDigitPress(digit: string): void {
-    if (display.isBottomZero() === true) {
-      setDisplay(new displayData(display.top, digit));
-      setOperationSwitch(false);
-      setQuickCalculationMode(false);
-    } else {
-      setDisplay(new displayData(display.top, display.bottom + digit));
-      setOperationSwitch(false);
-      setQuickCalculationMode(false);
+    if (display.isBottomSafe() === true) {
+      if (display.isBottomZero() === true || calculationCallback === true) {
+        setDisplay(new displayData(display.top, digit));
+        setOperationSwitch(false);
+        setQuickCalculationMode(false)
+        setCalculationCallback(false)
+      } else {
+        setDisplay(new displayData(display.top, display.bottom + digit));
+        setOperationSwitch(false);
+        setQuickCalculationMode(false);
+      }  
     }
+    
+  }
+
+  function precisionCompensation(input: number): number {
+    let output: number = input;
+    if (Number.isSafeInteger(input) === false || input.toString().length > 15) {
+      output = Number.parseFloat(input.toString().slice(0, 15));
+      console.log('t1')
+    }  
+    return output 
   }
 
   function calculateResult(): string {
-    let r : number = 0;
+    let r: number = 0;
     switch (expression.operation) {
       case '+':
         r = expression.operand1 + expression.operand2;
@@ -82,7 +99,7 @@ function App() {
         r = expression.operand1 / expression.operand2;
         break;
     }
-    return r.toString(); 
+    return precisionCompensation(r).toString(); 
   }
 
   useEffect(() => {
@@ -103,7 +120,8 @@ function App() {
         )
         setResult('')
         console.log('quick calc')
-        setOperationSwitch(true) 
+        setOperationSwitch(true)
+        setCalculationCallback(true) 
       } else {
         setDisplay(
           new displayData(
@@ -111,6 +129,7 @@ function App() {
           )
         )
         setResult('')
+        setCalculationCallback(true)
         console.log('useEffect display')  
       }
       
@@ -208,9 +227,11 @@ function App() {
             <div>
               {display.top}
             </div>
-            <div>
+            <div id='display-bottom-text'>
               {display.bottom}
             </div>
+          </div>
+          <div id='separator'>
           </div>
           <div id='buttonUI'>
             <div id="1st-row-wrap">
