@@ -278,8 +278,11 @@ function App() {
               </div>  
             </div>     
           </div>
-        </div>  
-      </div>      
+        </div>
+        <a href='https://github.com/atziri97/ts-calculator'>
+          <img id='logo' src="./public/github-mark-white.svg" alt="github-logo" />
+        </a>
+      </div>         
     </>
   )
 }

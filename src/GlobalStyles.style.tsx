@@ -25,6 +25,12 @@ export const GlobalStyles = createGlobalStyle`
     border-radius: 4px 4px;
   }
 
+  #logo {
+    position: absolute;
+    bottom: 40px;
+    left: 40px
+  }
+
   #display-bottom-text {
     font-size: 35px;
   }
