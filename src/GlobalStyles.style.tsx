@@ -13,6 +13,7 @@ export const GlobalStyles = createGlobalStyle`
     background-color: #1a1a1a;
     border: solid 1px #535252;
     border-radius: 4px;
+    box-shadow: 5px 7px 20px 8px #1c1c1c7a;
   }
 
   #display {
@@ -20,6 +21,8 @@ export const GlobalStyles = createGlobalStyle`
     padding: 10px 7px;
     width: 236px;
     overflow-wrap: break-word;
+    background-image: linear-gradient(180deg, #1a1a1a, #2d2d2d);
+    border-radius: 4px 4px;
   }
 
   #display-bottom-text {

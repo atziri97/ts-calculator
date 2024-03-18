@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { useState, useEffect } from 'react';
-import { StyledButtonComp } from './components/ButtonComp.style';
+import { StyledButtonComp, StyledOperationButtonComp } from './components/ButtonComp.style';
 import { GlobalStyles } from './GlobalStyles.style';
 import './App.css';
 
@@ -239,8 +239,8 @@ function App() {
           <div id='buttonUI'>
             <div id="1st-row-wrap">
               <StyledButtonComp $doubleHor label={'AC'} onClickProp={handleACPress}/>
-              <StyledButtonComp label={'/'} onClickProp={() => handleOperationPress('/')}/>
-              <StyledButtonComp label={'x'} onClickProp={() => handleOperationPress('x')}/>
+              <StyledOperationButtonComp label={'/'} onClickProp={() => handleOperationPress('/')}/>
+              <StyledOperationButtonComp label={'x'} onClickProp={() => handleOperationPress('x')}/>
             </div>
             <div id='keys-wrap'>
               <div id='digits-wrap'>
@@ -260,17 +260,17 @@ function App() {
                   <StyledButtonComp label={'9'} onClickProp={() => handleDigitPress('9')}/>              
                 </div>
                 <div>
-                  <StyledButtonComp label={'+/-'} onClickProp={handleNegativePress}/> 
+                  <StyledOperationButtonComp label={'+/-'} onClickProp={handleNegativePress}/> 
                   <StyledButtonComp label={'0'} onClickProp={() => handleDigitPress('0')}/>                      
-                  <StyledButtonComp label={'.'} onClickProp={handlePeriodPress}/>                
+                  <StyledOperationButtonComp label={'.'} onClickProp={handlePeriodPress}/>                
                 </div>         
               </div>
               <div>
                 <div>
-                  <StyledButtonComp label={'-'} onClickProp={() => handleOperationPress('-')}/>    
+                  <StyledOperationButtonComp label={'-'} onClickProp={() => handleOperationPress('-')}/>    
                 </div>
                 <div>
-                  <StyledButtonComp label={'+'} onClickProp={() => handleOperationPress('+')}/>    
+                  <StyledOperationButtonComp label={'+'} onClickProp={() => handleOperationPress('+')}/>    
                 </div>
                 <div>
                   <StyledButtonComp $doubleVer label={'='} onClickProp={handleEqualsPress}/>    
